@@ -5,12 +5,14 @@ const apiKey = "16137003-a99878a83e3cf9a5973a72148";
 const cors_api_host = "https://cors-anywhere.herokuapp.com/";
 let lastLi;
 let existLi;
+let endHits = false;
 
 const fetchItem = {
     page: 1,
     searchQuery: "",
+    per_page: 20,
     fetch() {
-        const url = `https://pixabay.com/api/?image_type=photo&orientation=horizontal&q=${this.query}&page=${this.page}&per_page=20&key=${apiKey}`;
+        const url = `https://pixabay.com/api/?image_type=photo&orientation=horizontal&q=${this.query}&page=${this.page}&per_page=${this.per_page}&key=${apiKey}`;
 
         return fetch(url)
             .then((response) => {
@@ -24,6 +26,7 @@ const fetchItem = {
                 console.log(this.page);
                 console.log(hits.length);
                 if (hits.length === 0) {
+                    endHits = true;
                     throw new Error(
                         "This is the end, No more images or input mistake"
                     );
@@ -53,16 +56,18 @@ function nextPageMarkup() {
 }
 
 function imgMarkup(hits) {
-    const markup = hits.reduce((acc, hit) => {
-        acc += `<li class="photo-card">
+    if (!endHits) {
+        const markup = hits.reduce((acc, hit) => {
+            acc += `<li class="photo-card">
 <img class="image" src="${hit.webformatURL}" alt="${hit.tags}" width="240" height="120" data-source="${hit.largeImageURL}" /></li>`;
-        return acc;
-    }, "");
+            return acc;
+        }, "");
 
-    imageList.insertAdjacentHTML("beforeend", markup);
+        imageList.insertAdjacentHTML("beforeend", markup);
 
-    lastLi = document.querySelector(".photo-card:last-child>img");
-    console.log(lastLi);
+        lastLi = document.querySelector(".photo-card:last-child>img");
+        console.log(lastLi);
+    } else return;
 }
 
 const options = {
@@ -73,10 +78,15 @@ const onEntry = (entries, observer) => {
     entries.forEach((entry) => {
         if (entry.isIntersecting) {
             if (entry.target === lastLi) {
-                nextPageMarkup();
-                observer.disconnect(entry.target);
+                if (!endHits) {
+                    nextPageMarkup();
+                    observer.disconnect(entry.target);
+                } else {
+                    return;
+                }
             }
         }
+        observer.disconnect(entry.target);
         observer.observe(lastLi);
     });
 };
