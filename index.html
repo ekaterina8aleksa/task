@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="stylesheet" href="./css/styles.css" />
+        <link
+            rel="stylesheet"
+            href="/node_modules/basiclightbox/dist/basicLightbox.min.css"
+        />
+        <title>Test</title>
+    </head>
+    <body>
+        <p class="task-name">Task_1</p>
+
+        <p class="task-name">Task_2</p>
+
+        <div id="controls">
+            <input type="number" min="0" max="100" step="1" class="js-input" />
+            <button type="button" data-action="create">Создать</button>
+            <button type="button" data-action="destroy">Очистить</button>
+        </div>
+
+        <div id="boxes"></div>
+
+        <p class="task-name">Task_3</p>
+
+        <form id="search-form">
+            <input
+                type="text"
+                name="query"
+                autocomplete="off"
+                placeholder="Search images..."
+            />
+        </form>
+
+        <ul class="gallery"></ul>
+
+        <script src="node_modules/basiclightbox/dist/basicLightbox.min.js"></script>
+        <script type="module" src="js/task1/task_1.js"></script>
+        <script type="module" src="js/task2/task_2.js"></script>
+        <script type="module" src="js/task3/task_3.js"></script>
+    </body>
+</html>
